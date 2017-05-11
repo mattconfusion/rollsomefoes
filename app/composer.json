@@ -1,0 +1,16 @@
+{
+	"autoload": {
+        "psr-4": {
+            "Rsf\\": "src/"
+        }
+    },
+    "config": {
+	    "preferred-install": "dist",
+	    "bin-dir": "vendor/bin/",
+	    "secure-http": false
+	},
+    "require": {
+        "league/climate": "^3.2",
+        "sergej-kurakin/diceroller": "dev-master"
+    }
+}
