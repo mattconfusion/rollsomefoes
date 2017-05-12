@@ -19,9 +19,6 @@ commando console lib + https://github.com/ringmaster/dicecalc */
 
 require __DIR__ . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
-use \DiceCalc\Calc;
-use Rsf\Rsf;
+$rsfCli = new \Rsf\RsfCli();
+$rsfCli->main();
 
-$rsfObj = new Rsf('foes.csv');
-var_dump($rsfObj->rollSomeFoes(3,"Berserker"));
-// $rsfObj->debugFoesList();

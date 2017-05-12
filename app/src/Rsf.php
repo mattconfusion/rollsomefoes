@@ -2,7 +2,7 @@
 
 namespace Rsf;
 
-use \DiceCalc\Calc as Calc;
+use \DiceCalc\Calc;
 
 class Rsf {
 
@@ -12,7 +12,6 @@ class Rsf {
 	const ARRAY_COLUMN_HP = "HP";
 	
 	protected $foes; //arrray
-	protected $foes_index; //NAME value 
 	protected $foes_count = 0; //total number of foes parsed
 
     /**
@@ -22,13 +21,6 @@ class Rsf {
 	public function __construct($pathToCsv){
 		$this->parseCsvIntoAssocArray($pathToCsv);
 		return $this;
-	}
-
-
-	public function debugFoesList(){
-		foreach($this->foes as $key=>$value){
-			echo "$key : ".json_encode($value). PHP_EOL;;
-		}
 	}
 
 	/**
@@ -70,6 +62,20 @@ class Rsf {
 		}
 		$this->foes_count = count($this->foes);
 		return $this;
+	}
+
+	public function debugFoesList(){
+		foreach($this->foes as $key=>$value){
+			echo "$key : ".json_encode($value). PHP_EOL;;
+		}
+	}
+
+	public function getFoesNames(){
+		return array_keys($this->foes);
+	}
+
+	public function getFoesCount(){
+		return $this->foes_count;
 	}
 
 
