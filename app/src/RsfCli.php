@@ -30,10 +30,11 @@ class RsfCli {
 		        'longPrefix'  => 'units',
 		        'description' => 'The unit of measurement for HD',
 		        'defaultValue' => 'hp',
+		        
 		    ],
 		    'help' => [
         		'longPrefix'  => 'help',
-        		'prefix'      => 'u',
+        		'prefix'      => 'h',
         		'description' => 'Prints this help',
         		'noValue'     => true,
     		],
@@ -79,6 +80,7 @@ class RsfCli {
 			// Continue? [y/n]
 			if (!$input->confirmed()) {
 			    $continue = false;
+			    $this->climate->out('Bye DM.');
 			}
 			$this->climate->br();
 		}
