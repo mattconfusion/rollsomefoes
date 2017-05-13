@@ -8,7 +8,6 @@ class RsfCli {
 
 	protected $climate;
 	protected $rsf;
-	protected $foes_list_string;
 	protected $units;
 
 	public function __construct(){
@@ -44,15 +43,19 @@ class RsfCli {
 		$this->checkForHelp();
 		$this->climate->arguments->parse();
 		$this->rsf = $this->createRsf($this->climate->arguments->get('file'));
+		$this->climate->out('CSV loaded and parsed.');
 		$this->units = $this->climate->arguments->get('units');
-		$this->foes_list_string = implode(", ", $this->rsf->getFoesNames());
+		
 		$continue = true;
 
 		//main loop
 		while($continue){
 			
-			//ask for the foe
-			$input = $this->climate->input('Pick your FOE ('.$this->foes_list_string.')');
+			$this->climate->out($this->rsf->getFoesCount() . ' foes available:');
+			$this->climate->columns($this->rsf->getFoesNames(), 4);
+			$this->climate->br();
+
+			$input = $this->climate->input('Pick your FOE, Sir.');
 			$input->accept($this->rsf->getFoesNames());
 			$input->strict();
 			$foe = $input->prompt();
@@ -60,7 +63,7 @@ class RsfCli {
 			$this->climate->br();
 
 			//ask for the number
-			$input = $this->climate->input('How many?');
+			$input = $this->climate->input('How many of them, kind Sir?');
 			$input->accept(function($response) {
 				    return (is_numeric($response));
 			});
@@ -76,11 +79,11 @@ class RsfCli {
 			$this->printResults($result,$this->units);
 			unset($result);
 
-			$input = $this->climate->confirm('Continue?');
+			$input = $this->climate->confirm('Would you like something else, Sir?');
 			// Continue? [y/n]
 			if (!$input->confirmed()) {
 			    $continue = false;
-			    $this->climate->out('Bye DM.');
+			    $this->climate->out('Bye Sir.');
 			}
 			$this->climate->br();
 		}
