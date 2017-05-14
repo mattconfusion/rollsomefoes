@@ -5,9 +5,7 @@
         }
     },
     "config": {
-	    "preferred-install": "dist",
-	    "bin-dir": "vendor/bin/",
-	    "secure-http": false
+	    "bin-dir": "vendor/bin/"
 	},
     "require": {
         "league/climate": "^3.2",
