@@ -13,6 +13,7 @@ class Rsf {
 	
 	protected $foes; //arrray
 	protected $foes_count = 0; //total number of foes parsed
+	protected $foes_names;
 
     /**
      * Build the Rsf object.
@@ -24,10 +25,10 @@ class Rsf {
 	}
 
 	/**
-	 * [rollSomeFoes description]
-	 * @param  [type] $number [description]
-	 * @param  [type] $foe   [description]
-	 * @return [type]         [description]
+	 * Roll the foe selected by name a number of times
+	 * @param  int $number how many foes?
+	 * @param  string $foe   the foe NAME identifier, strict string comparison
+	 * @return array        [0] holds the assoc array with Name and HD roll; [1] holds all the other info
 	 */
 	public function rollSomeFoes($number,$foe){
 		
@@ -61,9 +62,15 @@ class Rsf {
     		unset($temp_array);
 		}
 		$this->foes_count = count($this->foes);
+		$this->foes_names = array_keys($this->foes);
+		sort($this->foes_names);
 		return $this;
 	}
 
+	/**
+	 * Debug the foe defs 
+	 * @return echo key : json encode of array
+	 */
 	public function debugFoesList(){
 		foreach($this->foes as $key=>$value){
 			echo "$key : ".json_encode($value). PHP_EOL;;
@@ -71,7 +78,7 @@ class Rsf {
 	}
 
 	public function getFoesNames(){
-		return array_keys($this->foes);
+		return $this->foes_names;
 	}
 
 	public function getFoesCount(){
