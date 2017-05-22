@@ -3,6 +3,7 @@
 namespace Rsf;
 
 use \DiceCalc\Calc;
+use Rsf\RsfException;
 
 class Rsf {
 
@@ -10,7 +11,7 @@ class Rsf {
 	const CSV_COLUMN_HD = "HD";
 	const ARRAY_COLUMN_NAME = "Name";
 	const ARRAY_COLUMN_HP = "HP";
-	
+
 	protected $foes; //arrray
 	protected $foes_count = 0; //total number of foes parsed
 	protected $foes_names;
@@ -31,13 +32,13 @@ class Rsf {
 	 * @return array        [0] holds the assoc array with Name and HD roll; [1] holds all the other info
 	 */
 	public function rollSomeFoes($number,$foe){
-		
+
 		if(!isset($this->foes[$foe])){
-			throw new \Exception("Unable to find $foe in the parsed CSV");
+			throw new RsfException("Unable to find $foe in the parsed CSV");
 		}
 
 		$rolledFoes = array();
-		
+
 		for($i=0;$i<$number;$i++){
 			$calc = new Calc($this->foes[$foe][self::CSV_COLUMN_HD]);
 			$rolledFoes[$i][self::ARRAY_COLUMN_NAME] = "$foe #" . $i;
@@ -68,7 +69,7 @@ class Rsf {
 	}
 
 	/**
-	 * Debug the foe defs 
+	 * Debug the foe defs
 	 * @return echo key : json encode of array
 	 */
 	public function debugFoesList(){

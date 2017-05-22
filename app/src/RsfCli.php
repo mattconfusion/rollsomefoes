@@ -3,6 +3,7 @@
 namespace Rsf;
 
 use \League\CLImate\CLImate;
+use Rsf\RsfException;
 
 class RsfCli {
 
@@ -53,45 +54,48 @@ class RsfCli {
 			$this->checkForHelp();
 			$this->climate->arguments->parse();
 			$this->rsf = $this->createRsf($this->climate->arguments->get('file'));
-			$this->climate->br()->out('CSV loaded and parsed.');
+			$this->climate->br()->whisper('CSV loaded and parsed.');
 			$this->units = $this->climate->arguments->get('units');
 
 			$continue = true;
 
 			//main loop
 			while($continue){
+				try{
+					$this->climate->br()->info($this->rsf->getFoesCount() . ' foe types found.');
+					$this->climate->columns($this->rsf->getFoesNames(), 4);
 
-				$this->climate->br()->out($this->rsf->getFoesCount() . ' foe types found.');
-				$this->climate->columns($this->rsf->getFoesNames(), 4);
+					$input = $this->climate->br()->input('Pick your FOE, Sir.');
+					$input->accept($this->rsf->getFoesNames());
+					//$input->strict();
+					$foe = $input->prompt();
+					unset($input);
 
-				$input = $this->climate->br()->input('Pick your FOE, Sir.');
-				$input->accept($this->rsf->getFoesNames());
-				$input->strict();
-				$foe = $input->prompt();
-				unset($input);
+					//ask for the number
+					$input = $this->climate->br()->input('How many of them, kind Sir?');
+					$input->accept(function($response) {
+						return (is_numeric($response));
+					});
+					$input->strict();
+					$number = $input->prompt();
+					unset($input);
+					$this->climate->br();
 
-				//ask for the number
-				$input = $this->climate->br()->input('How many of them, kind Sir?');
-				$input->accept(function($response) {
-					return (is_numeric($response));
-				});
-				$input->strict();
-				$number = $input->prompt();
-				unset($input);
-				$this->climate->br();
+					//roll dice!
+					$result = $this->rsf->rollSomeFoes($number,$foe);
 
-				//roll dice!
-				$result = $this->rsf->rollSomeFoes($number,$foe);
+					//print the results
+					$this->printResults($result,$this->units);
+					unset($result);
 
-				//print the results
-				$this->printResults($result,$this->units);
-				unset($result);
-
-				$input = $this->climate->br()->confirm('Would you like something else, Sir?');
-				// Continue? [y/n]
-				if (!$input->confirmed()) {
-					$continue = false;
-					$this->climate->br()->out('Bye Sir.');
+					$input = $this->climate->br()->confirm('Would you like something else, Sir?');
+					// Continue? [y/n]
+					if (!$input->confirmed()) {
+						$continue = false;
+						$this->climate->br()->out('Bye Sir.');
+					}
+				}catch(RsfException $e){
+					$this->climate->shout($e->getMessage());
 				}
 
 			}
@@ -110,12 +114,12 @@ class RsfCli {
 	*/
 	protected function printResults($result,$units){
 		foreach($result[0] as $foeArray){
-			$this->climate->out($foeArray[Rsf::ARRAY_COLUMN_NAME].' ....... '.$foeArray[Rsf::ARRAY_COLUMN_HP]." $units");
+			$this->climate->out('<bold>'.$foeArray[Rsf::ARRAY_COLUMN_NAME].'</bold> ....... '.$foeArray[Rsf::ARRAY_COLUMN_HP]." $units");
 		}
 		$this->climate->br();
 
 		foreach($result[1] as $key=>$value){
-			$this->climate->out("$key: $value");
+			$this->climate->out("<bold>$key:</bold> $value");
 		}
 
 		$this->climate->br();
