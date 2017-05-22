@@ -63,7 +63,7 @@ class Rsf {
 		$csv = array_map("str_getcsv", file($pathToCsv,FILE_SKIP_EMPTY_LINES));
 		$keys = array_shift($csv);
 		if(array_diff($this->requiredColumns, $keys)){
-    	throw new RsfException('The CSV file must contain at least a column named '.self::CSV_COLUMN_HD.' and a column named '.self::CSV_COLUMN_NAME);
+			throw new RsfException('The CSV file must contain at least a column named '.self::CSV_COLUMN_HD.' and a column named '.self::CSV_COLUMN_NAME);
 		}
 		foreach ($csv as $i=>$row) {
 			$temp_array = array_combine($keys, $row);

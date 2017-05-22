@@ -11,6 +11,11 @@ class RsfCli {
 	protected $rsf;
 	protected $units;
 
+	const MODE_SINGLE = '1';
+	const MODE_MIXED = '2';
+	const MODE_MIXED_INNER_SEPARATOR = ':';
+	const MODE_MIXED_OUTER_SEPARATOR = ';';
+
 	/**
 	* Start the cli interface of RSF. Force ansi mode.
 	*/
@@ -61,7 +66,7 @@ class RsfCli {
 
 			//choose mode
 			$input = $this->climate->br()->input('Pick your mode, Sir. Simple(1) or Mixed(2)?');
-			$input->accept(array('1','2'));
+			$input->accept(array(self::MODE_SINGLE,self::MODE_MIXED));
 			$input->strict();
 			$mode = $input->prompt();
 
@@ -89,10 +94,10 @@ class RsfCli {
 	*/
 	protected function switchMode($mode){
 		switch($mode){
-			case '1':
+			case self::MODE_SINGLE:
 			$this->singleMode();
 			break;
-			case '2':
+			case self::MODE_MIXED:
 			$this->mixedMode();
 			break;
 			default:
@@ -102,9 +107,9 @@ class RsfCli {
 	}
 
 	/**
-	 * Single mode: user prompted to enter a foe name and after that a number
-	 * @return [type] [description]
-	 */
+	* Single mode: user prompted to enter a foe name and after that a number
+	* @return [type] [description]
+	*/
 	protected function singleMode(){
 		try{
 			$this->printFoesList();
@@ -135,9 +140,9 @@ class RsfCli {
 	}
 
 	/**
-	 * Mixed mode: the user is asked to enter a list of foes with numbers
-	 * @return [type] [description]
-	 */
+	* Mixed mode: the user is asked to enter a list of foes with numbers
+	* @return [type] [description]
+	*/
 	protected function mixedMode(){
 		try{
 			$this->printFoesList();
@@ -147,9 +152,9 @@ class RsfCli {
 			$this->climate->br();
 
 			//parse mixed foes:
-			$singleFoes = explode(';', $mixedFoes);
+			$singleFoes = explode(self::MODE_MIXED_OUTER_SEPARATOR, $mixedFoes);
 			foreach($singleFoes as $sf){
-				$foe = explode(':',$sf);
+				$foe = explode(self::MODE_MIXED_INNER_SEPARATOR,$sf);
 				//roll dice!
 				$result = $this->rsf->rollSomeFoes($foe[1],$foe[0]);
 				//print the results
