@@ -3,4 +3,7 @@ namespace Rsf;
 
 use \DiceCalc\Calc;
 
-class RsfException extends \Exception {}
+class RsfException extends \Exception
+{
+
+}
