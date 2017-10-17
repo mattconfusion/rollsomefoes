@@ -113,7 +113,7 @@ class RsfCli
     }
 
     /**
-     * ingle mode: user prompted to enter a foe name and after that a number
+     * Single mode: user prompted to enter a foe name and after that a number
      *
      * @return void
      */

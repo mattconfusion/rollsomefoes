@@ -66,9 +66,14 @@ class Rsf
      * @param string $pathToCsv Path to the csv file containing the foes list
      * 
      * @return Rsf
+     * @throws RsfException 
      */
     protected function parseCsvIntoAssocArray($pathToCsv)
     {
+        if (!file_exists($pathToCsv)) {
+            throw new RsfException("Unable to read CSV file $pathToCsv");
+        }
+
         $csv = array_map("str_getcsv", file($pathToCsv, FILE_SKIP_EMPTY_LINES));
         $keys = array_shift($csv);
         if (array_diff($this->requiredColumns, $keys)) {
