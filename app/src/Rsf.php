@@ -71,7 +71,7 @@ class Rsf
     protected function parseCsvIntoAssocArray($pathToCsv)
     {
         if (!file_exists($pathToCsv)) {
-            throw new RsfException("Unable to read CSV file $pathToCsv");
+            throw new RsfException("File $pathToCsv does not exists.");
         }
 
         $csv = array_map("str_getcsv", file($pathToCsv, FILE_SKIP_EMPTY_LINES));
